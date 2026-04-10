@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+
+# Logs
+*.log
+logs/
+
+# Claude / AI
+.claude/
+CLAUDE.md
+memory/
+
+# TypeORM
+ormconfig.json
+
+# Database
+*.sqlite
+
+# Internal docs (business strategy)
+internal/

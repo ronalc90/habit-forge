@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HabitForge - Forja habitos que transforman tu vida</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            warm: {
+              50: '#faf5ef',
+              100: '#f0e7db',
+              200: '#e6d9c8',
+              300: '#d1cdc7',
+              400: '#b5a898',
+              500: '#9a8b78',
+            },
+            accent: {
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+            },
+            forge: {
+              fire: '#f97316',
+              ember: '#ea580c',
+              gold: '#f59e0b',
+              success: '#22c55e',
+              danger: '#ef4444',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    [x-cloak] { display: none !important; }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background: #f0e7db;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      color: #3d3229;
+    }
+
+    /* ============ NEOMORPHISM BASE ============ */
+    .nm-flat {
+      background: #f0e7db;
+      box-shadow: 8px 8px 16px #d1cdc7, -8px -8px 16px #ffffff;
+      border-radius: 20px;
+    }
+    .nm-convex {
+      background: linear-gradient(145deg, #f7ede1, #e5dccf);
+      box-shadow: 8px 8px 16px #d1cdc7, -8px -8px 16px #ffffff;
+      border-radius: 20px;
+    }
+    .nm-pressed {
+      background: #f0e7db;
+      box-shadow: inset 6px 6px 12px #d1cdc7, inset -6px -6px 12px #ffffff;
+      border-radius: 20px;
+    }
+    .nm-input {
+      background: #f0e7db;
+      box-shadow: inset 4px 4px 8px #d1cdc7, inset -4px -4px 8px #ffffff;
+      border: none;
+      outline: none;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 15px;
+      color: #3d3229;
+      transition: box-shadow 0.3s ease;
+      width: 100%;
+    }
+    .nm-input::placeholder { color: #b5a898; }
+    .nm-input:focus {
+      box-shadow: inset 5px 5px 10px #c7bfb3, inset -5px -5px 10px #ffffff, 0 0 0 3px rgba(124, 58, 237, 0.15);
+    }
+    .nm-btn {
+      background: linear-gradient(145deg, #f7ede1, #e5dccf);
+      box-shadow: 6px 6px 12px #d1cdc7, -6px -6px 12px #ffffff;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 28px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: #3d3229;
+    }
+    .nm-btn:active {
+      box-shadow: inset 4px 4px 8px #d1cdc7, inset -4px -4px 8px #ffffff;
+      transform: scale(0.97);
+    }
+    .nm-btn-accent {
+      background: linear-gradient(145deg, #8b5cf6, #7c3aed);
+      box-shadow: 6px 6px 12px #d1cdc7, -6px -6px 12px #ffffff;
+      color: #fff;
+    }
+    .nm-btn-accent:hover {
+      background: linear-gradient(145deg, #9b6ff7, #8b4fe8);
+    }
+    .nm-btn-accent:active {
+      box-shadow: inset 4px 4px 8px #6226b8, inset -4px -4px 8px #9b4fff;
+    }
+    .nm-card {
+      background: #f0e7db;
+      box-shadow: 8px 8px 16px #d1cdc7, -8px -8px 16px #ffffff;
+      border-radius: 24px;
+      padding: 28px;
+      transition: all 0.25s ease;
+    }
+    .nm-card:hover {
+      box-shadow: 10px 10px 20px #ccc7c0, -10px -10px 20px #ffffff;
+      transform: translateY(-2px);
+    }
+    .nm-card-sm {
+      background: #f0e7db;
+      box-shadow: 5px 5px 10px #d1cdc7, -5px -5px 10px #ffffff;
+      border-radius: 16px;
+      padding: 18px;
+      transition: all 0.2s ease;
+    }
+
+    /* ============ CHECK BUTTON (Neomorphic Toggle) ============ */
+    .nm-check {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #f7ede1, #e5dccf);
+      box-shadow: 5px 5px 10px #d1cdc7, -5px -5px 10px #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .nm-check:active {
+      box-shadow: inset 4px 4px 8px #d1cdc7, inset -4px -4px 8px #ffffff;
+    }
+    .nm-check.checked {
+      background: linear-gradient(145deg, #8b5cf6, #7c3aed);
+      box-shadow: inset 3px 3px 6px #6226b8, inset -3px -3px 6px #a06aff;
+    }
+    .nm-check.checked svg {
+      color: #fff;
+    }
+
+    /* ============ ANIMATIONS ============ */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes bounceCheck {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.25); }
+      50% { transform: scale(0.9); }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    @keyframes flameFlicker {
+      0%, 100% { transform: scaleY(1) scaleX(1) rotate(0deg); }
+      20% { transform: scaleY(1.15) scaleX(0.9) rotate(-3deg); }
+      40% { transform: scaleY(0.9) scaleX(1.1) rotate(2deg); }
+      60% { transform: scaleY(1.1) scaleX(0.95) rotate(-2deg); }
+      80% { transform: scaleY(0.95) scaleX(1.05) rotate(1deg); }
+    }
+    @keyframes streakGlow {
+      0%, 100% { text-shadow: 0 0 4px rgba(249, 115, 22, 0.3); }
+      50% { text-shadow: 0 0 20px rgba(249, 115, 22, 0.7), 0 0 40px rgba(249, 115, 22, 0.3); }
+    }
+    @keyframes progressRing {
+      from { stroke-dashoffset: 440; }
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg) scale(0.3); opacity: 0; }
+    }
+    @keyframes celebrationBanner {
+      0% { transform: scale(0) rotate(-5deg); opacity: 0; }
+      60% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    @keyframes gentlePulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 0.7; }
+      100% { transform: translateY(-80px) scale(1.5); opacity: 0; }
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.9) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .anim-fade-up { animation: fadeInUp 0.5s ease-out both; }
+    .anim-slide-down { animation: slideDown 0.3s ease-out both; }
+    .anim-scale-in { animation: scaleIn 0.35s ease-out both; }
+    .anim-bounce-check { animation: bounceCheck 0.5s ease-out; }
+    .anim-flame { animation: flameFlicker 0.7s ease-in-out infinite; }
+    .anim-streak-glow { animation: streakGlow 2s ease-in-out infinite; }
+    .anim-modal { animation: modalIn 0.35s ease-out both; }
+
+    .confetti-piece {
+      position: fixed;
+      top: -15px;
+      z-index: 9999;
+      pointer-events: none;
+      animation: confettiFall linear forwards;
+    }
+
+    .celebration-banner {
+      animation: celebrationBanner 0.6s ease-out both;
+    }
+
+    /* ============ PROGRESS RING ============ */
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+    /* ============ BACKGROUND PATTERN ============ */
+    .warm-pattern {
+      background-image:
+        radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.02) 0%, transparent 50%);
+    }
+
+    /* ============ LANDING GRADIENT ============ */
+    .landing-gradient {
+      background: linear-gradient(135deg, #f0e7db 0%, #faf5ef 30%, #f0e7db 60%, #e8ddd0 100%);
+    }
+
+    /* ============ SCROLLBAR ============ */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f0e7db; }
+    ::-webkit-scrollbar-thumb {
+      background: #d1cdc7;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: #b5a898; }
+
+    /* ============ 7-DAY DOTS ============ */
+    .day-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+    .day-dot.filled {
+      background: #7c3aed;
+      box-shadow: 0 0 6px rgba(124, 58, 237, 0.4);
+    }
+    .day-dot.empty {
+      background: #d1cdc7;
+      box-shadow: inset 2px 2px 4px #bfb9b0, inset -2px -2px 4px #e3ddd4;
+    }
+
+    /* ============ MODAL OVERLAY ============ */
+    .modal-overlay {
+      background: rgba(61, 50, 41, 0.4);
+      backdrop-filter: blur(6px);
+    }
+
+    /* ============ EMOJI GRID ============ */
+    .emoji-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      background: #f0e7db;
+      box-shadow: 3px 3px 6px #d1cdc7, -3px -3px 6px #ffffff;
+      transition: all 0.15s ease;
+    }
+    .emoji-btn:active, .emoji-btn.selected {
+      box-shadow: inset 3px 3px 6px #d1cdc7, inset -3px -3px 6px #ffffff;
+    }
+    .emoji-btn.selected {
+      outline: 2px solid #7c3aed;
+    }
+
+    /* ============ FREQUENCY TOGGLE ============ */
+    .freq-toggle {
+      background: #f0e7db;
+      box-shadow: inset 4px 4px 8px #d1cdc7, inset -4px -4px 8px #ffffff;
+      border-radius: 14px;
+      padding: 4px;
+      display: flex;
+    }
+    .freq-option {
+      flex: 1;
+      text-align: center;
+      padding: 10px 16px;
+      border-radius: 11px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      color: #9a8b78;
+    }
+    .freq-option.active {
+      background: linear-gradient(145deg, #8b5cf6, #7c3aed);
+      color: #fff;
+      box-shadow: 3px 3px 6px #d1cdc7, -3px -3px 6px #ffffff;
+    }
+
+    /* ============ TOAST ============ */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      z-index: 9999;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      opacity: 0;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* ============ STAT CARD ICON ============ */
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: inset 3px 3px 6px rgba(0,0,0,0.08), inset -3px -3px 6px rgba(255,255,255,0.6);
+    }
+  </style>
+</head>
+
+<body x-data="habitApp()" x-cloak class="warm-pattern">
+
+  <!-- ==================== TOAST ==================== -->
+  <div class="toast" :class="{ 'show': toast.visible }">
+    <div class="nm-card-sm flex items-center gap-3 px-6 py-4" :class="toast.type === 'error' ? 'border-l-4 border-forge-danger' : 'border-l-4 border-accent-600'">
+      <span x-text="toast.type === 'error' ? '!' : ''" class="text-lg"></span>
+      <span x-text="toast.message" class="font-medium text-sm"></span>
+    </div>
+  </div>
+
+  <!-- ==================== CONFETTI CONTAINER ==================== -->
+  <div id="confetti-container"></div>
+
+  <!-- ==================== LANDING PAGE ==================== -->
+  <template x-if="!token">
+    <div class="landing-gradient min-h-screen">
+      <!-- Nav -->
+      <nav class="flex items-center justify-between px-6 md:px-12 py-6 max-w-6xl mx-auto">
+        <div class="flex items-center gap-2">
+          <span class="text-3xl">&#128293;</span>
+          <span class="text-2xl font-bold text-accent-700 tracking-tight">HabitForge</span>
+        </div>
+        <div class="flex gap-3">
+          <button @click="authMode = 'login'; showAuth = true" class="nm-btn text-sm px-5 py-2.5">Iniciar Sesion</button>
+          <button @click="authMode = 'register'; showAuth = true" class="nm-btn nm-btn-accent text-sm px-5 py-2.5">Registrarse</button>
+        </div>
+      </nav>
+
+      <!-- Hero -->
+      <section class="max-w-6xl mx-auto px-6 md:px-12 pt-10 pb-16">
+        <div class="text-center mb-10 anim-fade-up">
+          <div class="inline-flex items-center gap-2 mb-6">
+            <span class="text-6xl md:text-7xl anim-flame inline-block">&#128293;</span>
+          </div>
+          <h1 class="text-4xl md:text-6xl font-extrabold mb-5 leading-tight">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent-600 via-forge-fire to-accent-800">HabitForge</span>
+          </h1>
+          <p class="text-xl md:text-2xl font-medium text-warm-500 mb-4 max-w-2xl mx-auto">
+            Forja habitos que transforman tu vida
+          </p>
+          <p class="text-base text-warm-400 max-w-xl mx-auto leading-relaxed">
+            La plataforma de seguimiento de habitos con accountability social.
+            Construye rutinas solidas, mide tu progreso y mantente motivado
+            con el poder de la comunidad.
+          </p>
+          <div class="flex justify-center gap-4 mt-10">
+            <button @click="authMode = 'register'; showAuth = true" class="nm-btn nm-btn-accent text-base px-8 py-4 rounded-2xl">
+              Comenzar Gratis
+            </button>
+            <a href="#features" class="nm-btn text-base px-8 py-4 rounded-2xl inline-flex items-center gap-2">
+              Explorar
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Stats Banner -->
+        <div class="flex flex-col md:flex-row justify-center gap-8 mb-12 anim-fade-up" style="animation-delay: 0.2s">
+          <div class="nm-card text-center px-10 py-6">
+            <div class="text-3xl font-extrabold text-accent-600 mb-1">95%</div>
+            <div class="text-sm text-warm-500">Tasa de exito con accountability</div>
+          </div>
+          <div class="nm-card text-center px-10 py-6">
+            <div class="text-3xl font-extrabold text-forge-fire mb-1">21</div>
+            <div class="text-sm text-warm-500">Dias para formar un habito</div>
+          </div>
+          <div class="nm-card text-center px-10 py-6">
+            <div class="text-3xl font-extrabold text-forge-gold mb-1">100%</div>
+            <div class="text-sm text-warm-500">Gratuito, sin limites</div>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div id="features" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          <div class="nm-card text-center anim-fade-up" style="animation-delay: 0.1s">
+            <div class="text-4xl mb-4">&#128200;</div>
+            <h3 class="font-bold text-lg mb-2 text-accent-700">Seguimiento Visual</h3>
+            <p class="text-sm text-warm-500 leading-relaxed">Visualiza tu progreso con graficos intuitivos y anillos de progreso animados.</p>
+          </div>
+          <div class="nm-card text-center anim-fade-up" style="animation-delay: 0.2s">
+            <div class="text-4xl mb-4">&#128293;</div>
+            <h3 class="font-bold text-lg mb-2 text-accent-700">Rachas Motivadoras</h3>
+            <p class="text-sm text-warm-500 leading-relaxed">Mantiene tu racha viva con recordatorios y celebraciones por cada logro.</p>
+          </div>
+          <div class="nm-card text-center anim-fade-up" style="animation-delay: 0.3s">
+            <div class="text-4xl mb-4">&#129309;</div>
+            <h3 class="font-bold text-lg mb-2 text-accent-700">Accountability Social</h3>
+            <p class="text-sm text-warm-500 leading-relaxed">Conecta con amigos y mantente responsable con tu equipo de habitos.</p>
+          </div>
+          <div class="nm-card text-center anim-fade-up" style="animation-delay: 0.4s">
+            <div class="text-4xl mb-4">&#127942;</div>
+            <h3 class="font-bold text-lg mb-2 text-accent-700">Logros y Badges</h3>
+            <p class="text-sm text-warm-500 leading-relaxed">Desbloquea logros especiales al alcanzar hitos en tus habitos diarios.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="text-center py-8 text-warm-400 text-sm">
+        <p>HabitForge &mdash; Forjando mejores habitos, un dia a la vez.</p>
+      </footer>
+
+      <!-- ============ AUTH MODAL ============ -->
+      <template x-if="showAuth">
+        <div class="fixed inset-0 z-50 flex items-center justify-center modal-overlay" @click.self="showAuth = false">
+          <div class="nm-card w-full max-w-md mx-4 anim-modal relative">
+            <!-- Close -->
+            <button @click="showAuth = false" class="absolute top-5 right-5 nm-btn w-10 h-10 rounded-full flex items-center justify-center p-0 text-warm-500">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+
+            <!-- Header -->
+            <div class="text-center mb-8">
+              <span class="text-4xl mb-3 block">&#128293;</span>
+              <h2 class="text-2xl font-bold text-accent-700" x-text="authMode === 'login' ? 'Bienvenido de vuelta' : 'Crea tu cuenta'"></h2>
+              <p class="text-sm text-warm-400 mt-1" x-text="authMode === 'login' ? 'Ingresa a tu cuenta para continuar' : 'Comienza a forjar tus habitos hoy'"></p>
+            </div>
+
+            <!-- Form -->
+            <form @submit.prevent="handleAuth" class="space-y-5">
+              <template x-if="authMode === 'register'">
+                <div>
+                  <label class="text-sm font-semibold text-warm-500 mb-2 block">Nombre</label>
+                  <input type="text" x-model="authForm.displayName" class="nm-input" placeholder="Tu nombre" required />
+                </div>
+              </template>
+              <div>
+                <label class="text-sm font-semibold text-warm-500 mb-2 block">Email</label>
+                <input type="email" x-model="authForm.email" class="nm-input" placeholder="tu@email.com" required />
+              </div>
+              <div>
+                <label class="text-sm font-semibold text-warm-500 mb-2 block">Contrasena</label>
+                <input type="password" x-model="authForm.password" class="nm-input" placeholder="Min. 6 caracteres" required minlength="6" />
+              </div>
+
+              <!-- Error -->
+              <template x-if="authError">
+                <div class="nm-pressed rounded-xl px-4 py-3 text-sm text-forge-danger font-medium flex items-center gap-2">
+                  <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span x-text="authError"></span>
+                </div>
+              </template>
+
+              <button type="submit" class="nm-btn nm-btn-accent w-full py-4 text-base rounded-2xl" :disabled="authLoading">
+                <span x-show="!authLoading" x-text="authMode === 'login' ? 'Iniciar Sesion' : 'Crear Cuenta'"></span>
+                <span x-show="authLoading" class="flex items-center justify-center gap-2">
+                  <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                  Procesando...
+                </span>
+              </button>
+            </form>
+
+            <!-- Toggle -->
+            <div class="text-center mt-6 text-sm text-warm-500">
+              <template x-if="authMode === 'login'">
+                <span>No tienes cuenta? <button @click="authMode = 'register'; authError = ''" class="text-accent-600 font-semibold hover:underline">Registrate</button></span>
+              </template>
+              <template x-if="authMode === 'register'">
+                <span>Ya tienes cuenta? <button @click="authMode = 'login'; authError = ''" class="text-accent-600 font-semibold hover:underline">Inicia sesion</button></span>
+              </template>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </template>
+
+  <!-- ==================== DASHBOARD ==================== -->
+  <template x-if="token">
+    <div class="min-h-screen pb-8">
+      <!-- Top Bar -->
+      <header class="nm-flat mx-4 md:mx-8 mt-4 mb-8 px-6 py-4 flex items-center justify-between" style="border-radius: 18px;">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">&#128293;</span>
+          <div>
+            <h1 class="text-lg font-bold text-accent-700 leading-tight" x-text="getGreeting() + ', ' + (user?.displayName || 'Forjador')"></h1>
+            <p class="text-xs text-warm-400" x-text="todayFormatted()"></p>
+          </div>
+        </div>
+        <button @click="logout()" class="nm-btn text-sm px-5 py-2.5 flex items-center gap-2 text-warm-500">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          Salir
+        </button>
+      </header>
+
+      <div class="max-w-5xl mx-auto px-4 md:px-8">
+
+        <!-- Celebration Banner -->
+        <template x-if="allCompletedToday && habits.length > 0">
+          <div class="mb-8 nm-card text-center py-8 celebration-banner border-2 border-accent-400/20">
+            <div class="text-5xl mb-3">&#127881;&#127775;&#127881;</div>
+            <h2 class="text-2xl font-extrabold text-accent-700 mb-2">Dia perfecto!</h2>
+            <p class="text-warm-500">Completaste todos tus habitos hoy. Sigue asi!</p>
+          </div>
+        </template>
+
+        <!-- Progress Ring + Stats Row -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <!-- Progress Ring Card -->
+          <div class="nm-card flex flex-col items-center justify-center py-8 md:col-span-1">
+            <div class="relative mb-4">
+              <svg width="150" height="150" viewBox="0 0 150 150">
+                <!-- Background ring -->
+                <circle cx="75" cy="75" r="62" fill="none" stroke="#d1cdc7" stroke-width="12" opacity="0.5"/>
+                <!-- Progress ring -->
+                <circle cx="75" cy="75" r="62"
+                  fill="none"
+                  stroke="url(#progressGradient)"
+                  stroke-width="12"
+                  stroke-linecap="round"
+                  class="progress-ring-circle"
+                  :stroke-dasharray="390"
+                  :stroke-dashoffset="390 - (390 * progressPercent() / 100)"
+                />
+                <defs>
+                  <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#7c3aed"/>
+                    <stop offset="100%" stop-color="#f97316"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-3xl font-extrabold text-accent-700" x-text="completedCount + '/' + habits.length"></span>
+                <span class="text-xs text-warm-400 font-medium">completados</span>
+              </div>
+            </div>
+            <h3 class="font-bold text-accent-700 text-sm">Progreso de Hoy</h3>
+          </div>
+
+          <!-- Stats Cards -->
+          <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="nm-card-sm flex flex-col items-center text-center py-6">
+              <div class="stat-icon bg-accent-600/10 text-accent-600 mb-3">&#128202;</div>
+              <div class="text-2xl font-extrabold text-accent-700" x-text="weeklyConsistency() + '%'"></div>
+              <div class="text-xs text-warm-400 mt-1">Consistencia semanal</div>
+            </div>
+            <div class="nm-card-sm flex flex-col items-center text-center py-6">
+              <div class="stat-icon bg-forge-fire/10 text-forge-fire mb-3">&#9989;</div>
+              <div class="text-2xl font-extrabold text-forge-fire" x-text="totalCheckIns"></div>
+              <div class="text-xs text-warm-400 mt-1">Check-ins totales</div>
+            </div>
+            <div class="nm-card-sm flex flex-col items-center text-center py-6">
+              <div class="stat-icon bg-forge-gold/10 text-forge-gold mb-3">&#128293;</div>
+              <div class="text-2xl font-extrabold text-forge-gold" x-text="longestActiveStreak"></div>
+              <div class="text-xs text-warm-400 mt-1">Mejor racha activa</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section Header: Habits -->
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-xl font-bold text-accent-800 flex items-center gap-2">
+            <span>&#128170;</span> Mis Habitos
+          </h2>
+          <button @click="showAddModal = true" class="nm-btn nm-btn-accent text-sm px-5 py-2.5 rounded-xl flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Nuevo Habito
+          </button>
+        </div>
+
+        <!-- Empty State -->
+        <template x-if="habits.length === 0 && !loading">
+          <div class="nm-card text-center py-16 mb-8">
+            <div class="text-6xl mb-4">&#128587;</div>
+            <h3 class="text-xl font-bold text-accent-700 mb-2">Sin habitos aun</h3>
+            <p class="text-warm-400 mb-6 text-sm max-w-sm mx-auto">Comienza creando tu primer habito y da el primer paso hacia una mejor version de ti.</p>
+            <button @click="showAddModal = true" class="nm-btn nm-btn-accent px-6 py-3 rounded-xl">
+              Crear mi primer habito
+            </button>
+          </div>
+        </template>
+
+        <!-- Loading -->
+        <template x-if="loading">
+          <div class="text-center py-16">
+            <svg class="w-10 h-10 animate-spin text-accent-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+            <p class="text-warm-400 font-medium">Cargando tus habitos...</p>
+          </div>
+        </template>
+
+        <!-- Habit Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+          <template x-for="habit in habits" :key="habit.id">
+            <div class="nm-card flex flex-col gap-4 anim-scale-in relative group">
+              <!-- Delete button -->
+              <button @click="confirmDelete(habit)" class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity nm-btn w-8 h-8 rounded-full flex items-center justify-center p-0 text-warm-400 hover:text-forge-danger" title="Eliminar habito">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </button>
+
+              <!-- Top Row: Icon + Info + Check -->
+              <div class="flex items-center gap-4">
+                <!-- Icon -->
+                <div class="nm-pressed w-16 h-16 flex items-center justify-center rounded-2xl text-3xl flex-shrink-0" x-text="habit.icon || '&#128640;'"></div>
+
+                <!-- Name + Streak -->
+                <div class="flex-1 min-w-0">
+                  <h3 class="font-bold text-base text-accent-800 truncate" x-text="habit.name"></h3>
+                  <div class="flex items-center gap-2 mt-1">
+                    <!-- Streak flame -->
+                    <template x-if="(habit.currentStreak || 0) > 0">
+                      <span class="flex items-center gap-1 text-sm font-bold"
+                            :class="(habit.currentStreak || 0) >= 3 ? 'text-forge-fire anim-streak-glow' : 'text-warm-400'">
+                        <span :class="(habit.currentStreak || 0) >= 3 ? 'anim-flame inline-block' : ''"
+                              x-text="(habit.currentStreak || 0) >= 3 ? '&#128293;' : '&#128293;'"></span>
+                        <span x-text="habit.currentStreak + ' dias'"></span>
+                      </span>
+                    </template>
+                    <template x-if="(habit.currentStreak || 0) === 0">
+                      <span class="text-sm text-warm-400">Sin racha</span>
+                    </template>
+                  </div>
+                </div>
+
+                <!-- Neomorphic Check Button -->
+                <div class="nm-check"
+                     :class="{ 'checked': habit.completedToday }"
+                     @click="toggleCheckIn(habit)"
+                     :title="habit.completedToday ? 'Desmarcar' : 'Completar'">
+                  <svg x-show="habit.completedToday" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                  <svg x-show="!habit.completedToday" class="w-6 h-6 text-warm-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+                </div>
+              </div>
+
+              <!-- Bottom Row: 7-day dots + Best streak -->
+              <div class="flex items-center justify-between">
+                <!-- 7-day mini bar -->
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs text-warm-400 mr-1">7d:</span>
+                  <template x-for="(day, idx) in getLast7Days(habit)" :key="idx">
+                    <div class="day-dot" :class="day ? 'filled' : 'empty'" :title="day ? 'Completado' : 'Pendiente'"></div>
+                  </template>
+                </div>
+                <!-- Best streak badge -->
+                <template x-if="(habit.bestStreak || 0) > 0">
+                  <div class="nm-pressed rounded-xl px-3 py-1.5 text-xs font-bold text-forge-gold flex items-center gap-1">
+                    <span>&#127942;</span>
+                    <span x-text="'Mejor: ' + habit.bestStreak"></span>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- ============ ADD HABIT MODAL ============ -->
+      <template x-if="showAddModal">
+        <div class="fixed inset-0 z-50 flex items-center justify-center modal-overlay" @click.self="showAddModal = false">
+          <div class="nm-card w-full max-w-lg mx-4 anim-modal relative max-h-[90vh] overflow-y-auto">
+            <!-- Close -->
+            <button @click="showAddModal = false" class="absolute top-5 right-5 nm-btn w-10 h-10 rounded-full flex items-center justify-center p-0 text-warm-500">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+
+            <h2 class="text-xl font-bold text-accent-700 mb-6 flex items-center gap-2">
+              <span>&#10024;</span> Nuevo Habito
+            </h2>
+
+            <form @submit.prevent="createHabit" class="space-y-6">
+              <!-- Emoji Picker -->
+              <div>
+                <label class="text-sm font-semibold text-warm-500 mb-3 block">Icono</label>
+                <div class="grid grid-cols-10 gap-2">
+                  <template x-for="emoji in emojiOptions" :key="emoji">
+                    <button type="button" class="emoji-btn" :class="{ 'selected': newHabit.icon === emoji }" @click="newHabit.icon = emoji" x-text="emoji"></button>
+                  </template>
+                </div>
+              </div>
+
+              <!-- Name -->
+              <div>
+                <label class="text-sm font-semibold text-warm-500 mb-2 block">Nombre del habito</label>
+                <input type="text" x-model="newHabit.name" class="nm-input" placeholder="Ej: Meditar 10 minutos" required />
+              </div>
+
+              <!-- Frequency Toggle -->
+              <div>
+                <label class="text-sm font-semibold text-warm-500 mb-2 block">Frecuencia</label>
+                <div class="freq-toggle">
+                  <div class="freq-option" :class="{ 'active': newHabit.frequency === 'daily' }" @click="newHabit.frequency = 'daily'">Diario</div>
+                  <div class="freq-option" :class="{ 'active': newHabit.frequency === 'weekly' }" @click="newHabit.frequency = 'weekly'">Semanal</div>
+                </div>
+              </div>
+
+              <!-- Target Days (for weekly) -->
+              <template x-if="newHabit.frequency === 'weekly'">
+                <div>
+                  <label class="text-sm font-semibold text-warm-500 mb-2 block">Dias por semana</label>
+                  <div class="flex gap-2">
+                    <template x-for="n in [1,2,3,4,5,6,7]" :key="n">
+                      <button type="button" class="emoji-btn !w-10 !h-10 !text-sm !font-bold"
+                        :class="{ 'selected': newHabit.targetDaysPerWeek === n }"
+                        @click="newHabit.targetDaysPerWeek = n"
+                        x-text="n"></button>
+                    </template>
+                  </div>
+                </div>
+              </template>
+
+              <!-- Time Picker -->
+              <div>
+                <label class="text-sm font-semibold text-warm-500 mb-2 block">Hora preferida</label>
+                <input type="time" x-model="newHabit.preferredTime" class="nm-input" />
+              </div>
+
+              <!-- Submit -->
+              <button type="submit" class="nm-btn nm-btn-accent w-full py-4 text-base rounded-2xl" :disabled="creatingHabit">
+                <span x-show="!creatingHabit">Crear Habito</span>
+                <span x-show="creatingHabit" class="flex items-center justify-center gap-2">
+                  <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                  Creando...
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </template>
+
+      <!-- ============ DELETE CONFIRM MODAL ============ -->
+      <template x-if="showDeleteModal">
+        <div class="fixed inset-0 z-50 flex items-center justify-center modal-overlay" @click.self="showDeleteModal = false">
+          <div class="nm-card w-full max-w-sm mx-4 anim-modal text-center">
+            <div class="text-5xl mb-4">&#9888;&#65039;</div>
+            <h3 class="text-lg font-bold text-accent-700 mb-2">Eliminar habito</h3>
+            <p class="text-sm text-warm-500 mb-6">
+              Estas seguro de eliminar <strong x-text="habitToDelete?.name"></strong>? Esta accion no se puede deshacer.
+            </p>
+            <div class="flex gap-3 justify-center">
+              <button @click="showDeleteModal = false" class="nm-btn px-6 py-3 rounded-xl text-sm">Cancelar</button>
+              <button @click="deleteHabit()" class="nm-btn px-6 py-3 rounded-xl text-sm text-white" style="background: linear-gradient(145deg, #ef4444, #dc2626); box-shadow: 6px 6px 12px #d1cdc7, -6px -6px 12px #ffffff;">
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </template>
+
+  <!-- ==================== ALPINE.JS APP ==================== -->
+  <script>
+    const API_BASE = 'http://localhost:3002/api/v1';
+
+    function habitApp() {
+      return {
+        // Auth
+        token: localStorage.getItem('hf_token') || '',
+        user: JSON.parse(localStorage.getItem('hf_user') || 'null'),
+        showAuth: false,
+        authMode: 'login',
+        authForm: { email: '', password: '', displayName: '' },
+        authError: '',
+        authLoading: false,
+
+        // Dashboard
+        habits: [],
+        completedCount: 0,
+        totalCheckIns: 0,
+        longestActiveStreak: 0,
+        loading: false,
+        showAddModal: false,
+        showDeleteModal: false,
+        habitToDelete: null,
+        creatingHabit: false,
+
+        // Toast
+        toast: { visible: false, message: '', type: 'success' },
+
+        // New Habit Form
+        newHabit: {
+          name: '',
+          icon: '&#128640;',
+          frequency: 'daily',
+          preferredTime: '08:00',
+          targetDaysPerWeek: 5,
+        },
+
+        // Emoji options
+        emojiOptions: [
+          '\u{1F680}', '\u{1F4AA}', '\u{1F4D6}', '\u{1F3CB}', '\u{1F9D8}',
+          '\u{1F4A7}', '\u{1F34E}', '\u{1F3AF}', '\u{270D}',  '\u{1F3B5}',
+          '\u{1F6B6}', '\u{1F4BB}', '\u{1F3A8}', '\u{1F31F}', '\u{2615}',
+          '\u{1F6CC}', '\u{1F4B0}', '\u{1F9E0}', '\u{1F331}', '\u{2764}'
+        ],
+
+        // All completed flag
+        get allCompletedToday() {
+          return this.habits.length > 0 && this.habits.every(h => h.completedToday);
+        },
+
+        // Init
+        init() {
+          if (this.token) {
+            this.loadDashboard();
+          }
+        },
+
+        // ---- Auth ----
+        async handleAuth() {
+          this.authError = '';
+          this.authLoading = true;
+          try {
+            const endpoint = this.authMode === 'login' ? '/auth/login' : '/auth/register';
+            const body = this.authMode === 'login'
+              ? { email: this.authForm.email, password: this.authForm.password }
+              : { email: this.authForm.email, password: this.authForm.password, displayName: this.authForm.displayName };
+
+            const res = await fetch(API_BASE + endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body),
+            });
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+              throw new Error(data.error?.message || data.message || 'Error en autenticacion');
+            }
+
+            this.token = data.data.accessToken;
+            this.user = data.data.user;
+            localStorage.setItem('hf_token', this.token);
+            localStorage.setItem('hf_user', JSON.stringify(this.user));
+            this.showAuth = false;
+            this.authForm = { email: '', password: '', displayName: '' };
+            this.showToast(this.authMode === 'login' ? 'Bienvenido de vuelta!' : 'Cuenta creada exitosamente!');
+            this.loadDashboard();
+          } catch (err) {
+            this.authError = err.message;
+          } finally {
+            this.authLoading = false;
+          }
+        },
+
+        logout() {
+          this.token = '';
+          this.user = null;
+          this.habits = [];
+          this.completedCount = 0;
+          localStorage.removeItem('hf_token');
+          localStorage.removeItem('hf_user');
+        },
+
+        // ---- API helpers ----
+        authHeaders() {
+          return {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.token,
+          };
+        },
+
+        async apiFetch(path, options = {}) {
+          const res = await fetch(API_BASE + path, {
+            ...options,
+            headers: { ...this.authHeaders(), ...(options.headers || {}) },
+          });
+          if (res.status === 401) {
+            this.logout();
+            this.showToast('Sesion expirada. Inicia sesion de nuevo.', 'error');
+            throw new Error('Unauthorized');
+          }
+          const data = await res.json();
+          if (!res.ok || !data.success) {
+            throw new Error(data.error?.message || data.message || 'Error de servidor');
+          }
+          return data.data;
+        },
+
+        // ---- Dashboard ----
+        async loadDashboard() {
+          this.loading = true;
+          try {
+            // Load dashboard summary
+            const dashboard = await this.apiFetch('/dashboard/today');
+            this.completedCount = dashboard.completedToday || 0;
+
+            // Load habits
+            const habitsData = await this.apiFetch('/habits');
+            const habitsArray = Array.isArray(habitsData) ? habitsData : (habitsData.habits || []);
+
+            // Merge with dashboard streaks
+            const streakMap = {};
+            if (dashboard.habits) {
+              (Array.isArray(dashboard.habits) ? dashboard.habits : []).forEach(h => {
+                streakMap[h.id] = h;
+              });
+            }
+            if (dashboard.currentStreaks) {
+              (Array.isArray(dashboard.currentStreaks) ? dashboard.currentStreaks : []).forEach(s => {
+                if (streakMap[s.habitId]) {
+                  streakMap[s.habitId].currentStreak = s.currentStreak;
+                } else {
+                  streakMap[s.habitId] = { currentStreak: s.currentStreak };
+                }
+              });
+            }
+
+            this.habits = habitsArray.map(h => {
+              const dashInfo = streakMap[h.id] || {};
+              return {
+                ...h,
+                currentStreak: dashInfo.currentStreak ?? h.currentStreak ?? 0,
+                bestStreak: dashInfo.bestStreak ?? h.bestStreak ?? 0,
+                completedToday: dashInfo.completedToday ?? h.completedToday ?? false,
+                checkIns: h.checkIns || [],
+              };
+            });
+
+            // Calculate totals
+            this.totalCheckIns = this.habits.reduce((sum, h) => sum + (h.checkIns?.length || 0), 0);
+            this.longestActiveStreak = this.habits.reduce((max, h) => Math.max(max, h.currentStreak || 0), 0);
+
+            // Check for all completed
+            if (this.allCompletedToday) {
+              this.$nextTick(() => this.launchConfetti());
+            }
+          } catch (err) {
+            if (err.message !== 'Unauthorized') {
+              this.showToast('Error cargando datos: ' + err.message, 'error');
+            }
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        // ---- Check-in ----
+        async toggleCheckIn(habit) {
+          const today = this.todayISO();
+          const wasCompleted = habit.completedToday;
+
+          // Optimistic update
+          habit.completedToday = !wasCompleted;
+          this.completedCount += wasCompleted ? -1 : 1;
+          if (!wasCompleted) {
+            habit.currentStreak = (habit.currentStreak || 0) + 1;
+          } else {
+            habit.currentStreak = Math.max(0, (habit.currentStreak || 0) - 1);
+          }
+
+          // Animate the check button
+          const el = event.currentTarget;
+          el.classList.add('anim-bounce-check');
+          setTimeout(() => el.classList.remove('anim-bounce-check'), 500);
+
+          try {
+            if (wasCompleted) {
+              await this.apiFetch(`/check-ins/habit/${habit.id}/date/${today}`, { method: 'DELETE' });
+              this.showToast('Check-in deshecho');
+            } else {
+              await this.apiFetch('/check-ins', {
+                method: 'POST',
+                body: JSON.stringify({ habitId: habit.id, checkDate: today }),
+              });
+              this.showToast('Habito completado!');
+
+              // Check if all done
+              if (this.allCompletedToday) {
+                setTimeout(() => this.launchConfetti(), 300);
+              }
+            }
+            // Reload to sync streaks
+            setTimeout(() => this.loadDashboard(), 500);
+          } catch (err) {
+            // Revert on error
+            habit.completedToday = wasCompleted;
+            this.completedCount += wasCompleted ? 1 : -1;
+            this.showToast('Error: ' + err.message, 'error');
+          }
+        },
+
+        // ---- Create Habit ----
+        async createHabit() {
+          if (!this.newHabit.name.trim()) return;
+          this.creatingHabit = true;
+          try {
+            await this.apiFetch('/habits', {
+              method: 'POST',
+              body: JSON.stringify({
+                name: this.newHabit.name.trim(),
+                icon: this.newHabit.icon,
+                frequency: this.newHabit.frequency,
+                preferredTime: this.newHabit.preferredTime,
+                targetDaysPerWeek: this.newHabit.frequency === 'weekly' ? this.newHabit.targetDaysPerWeek : 7,
+              }),
+            });
+            this.showToast('Habito creado exitosamente!');
+            this.showAddModal = false;
+            this.newHabit = { name: '', icon: '\u{1F680}', frequency: 'daily', preferredTime: '08:00', targetDaysPerWeek: 5 };
+            await this.loadDashboard();
+          } catch (err) {
+            this.showToast('Error creando habito: ' + err.message, 'error');
+          } finally {
+            this.creatingHabit = false;
+          }
+        },
+
+        // ---- Delete Habit ----
+        confirmDelete(habit) {
+          this.habitToDelete = habit;
+          this.showDeleteModal = true;
+        },
+
+        async deleteHabit() {
+          if (!this.habitToDelete) return;
+          try {
+            await this.apiFetch(`/habits/${this.habitToDelete.id}`, { method: 'DELETE' });
+            this.showToast('Habito eliminado');
+            this.showDeleteModal = false;
+            this.habitToDelete = null;
+            await this.loadDashboard();
+          } catch (err) {
+            this.showToast('Error eliminando: ' + err.message, 'error');
+          }
+        },
+
+        // ---- Utilities ----
+        todayISO() {
+          const d = new Date();
+          return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        },
+
+        todayFormatted() {
+          return new Date().toLocaleDateString('es-ES', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+          });
+        },
+
+        getGreeting() {
+          const h = new Date().getHours();
+          if (h < 12) return 'Buenos dias';
+          if (h < 18) return 'Buenas tardes';
+          return 'Buenas noches';
+        },
+
+        progressPercent() {
+          if (this.habits.length === 0) return 0;
+          return Math.round((this.completedCount / this.habits.length) * 100);
+        },
+
+        weeklyConsistency() {
+          if (this.habits.length === 0) return 0;
+          let total = 0;
+          let completed = 0;
+          this.habits.forEach(h => {
+            const days = this.getLast7Days(h);
+            total += 7;
+            completed += days.filter(Boolean).length;
+          });
+          return total > 0 ? Math.round((completed / total) * 100) : 0;
+        },
+
+        getLast7Days(habit) {
+          const result = [];
+          const checkDates = new Set();
+          if (habit.checkIns) {
+            habit.checkIns.forEach(ci => {
+              const d = typeof ci === 'string' ? ci : (ci.checkDate || ci.date || '');
+              if (d) checkDates.add(d.substring(0, 10));
+            });
+          }
+          for (let i = 6; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            const iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+            result.push(checkDates.has(iso));
+          }
+          return result;
+        },
+
+        // ---- Toast ----
+        showToast(message, type = 'success') {
+          this.toast = { visible: true, message, type };
+          setTimeout(() => { this.toast.visible = false; }, 3000);
+        },
+
+        // ---- Confetti ----
+        launchConfetti() {
+          const container = document.getElementById('confetti-container');
+          const colors = ['#7c3aed', '#f97316', '#f59e0b', '#22c55e', '#8b5cf6', '#ef4444', '#06b6d4'];
+          const shapes = ['circle', 'square'];
+
+          for (let i = 0; i < 60; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const shape = shapes[Math.floor(Math.random() * shapes.length)];
+            const size = 6 + Math.random() * 10;
+            const left = Math.random() * 100;
+            const duration = 2 + Math.random() * 3;
+            const delay = Math.random() * 0.8;
+
+            piece.style.left = left + '%';
+            piece.style.width = size + 'px';
+            piece.style.height = size + 'px';
+            piece.style.backgroundColor = color;
+            piece.style.borderRadius = shape === 'circle' ? '50%' : '2px';
+            piece.style.animationDuration = duration + 's';
+            piece.style.animationDelay = delay + 's';
+            piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+            container.appendChild(piece);
+            setTimeout(() => piece.remove(), (duration + delay) * 1000 + 200);
+          }
+        },
+      };
+    }
+  </script>
+</body>
+</html>
