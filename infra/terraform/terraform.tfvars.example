@@ -1,0 +1,21 @@
+# ============================================
+# HabitForge - Variables de ejemplo
+# Copiar a terraform.tfvars y completar valores reales
+# NUNCA commitear terraform.tfvars con secretos
+# ============================================
+
+aws_region      = "us-east-1"
+project_name    = "habitforge"
+environment     = "production"
+container_image = "ghcr.io/ronalc90/habit-forge:latest"
+container_port  = 3002
+task_cpu        = "256"
+task_memory     = "512"
+desired_count   = 2
+max_count       = 6
+
+db_host     = "habitforge-db.xxxxx.us-east-1.rds.amazonaws.com"
+db_username = "habitforge"
+db_password = "CHANGE_ME"
+jwt_secret  = "CHANGE_ME"
+redis_host  = "habitforge-redis.xxxxx.cache.amazonaws.com"
