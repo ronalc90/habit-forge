@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,7 +20,19 @@ export class HabitsService {
     private readonly streakRepository: Repository<Streak>,
   ) {}
 
+  private readonly MAX_ACTIVE_HABITS = 20;
+
   async create(userId: string, createHabitDto: CreateHabitDto): Promise<Habit> {
+    const activeCount = await this.habitRepository.count({
+      where: { userId, isActive: true },
+    });
+
+    if (activeCount >= this.MAX_ACTIVE_HABITS) {
+      throw new BadRequestException(
+        `Maximum of ${this.MAX_ACTIVE_HABITS} active habits reached. Deactivate or delete an existing habit first.`,
+      );
+    }
+
     const maxOrder = await this.habitRepository
       .createQueryBuilder('habit')
       .select('MAX(habit.sortOrder)', 'max')
@@ -48,7 +61,7 @@ export class HabitsService {
     return this.habitRepository.find({
       where: { userId, isActive: true },
       order: { sortOrder: 'ASC' },
-      relations: ['streak'],
+      relations: ['streak', 'checkIns'],
     });
   }
 
@@ -56,7 +69,7 @@ export class HabitsService {
     return this.habitRepository.find({
       where: { userId },
       order: { sortOrder: 'ASC' },
-      relations: ['streak'],
+      relations: ['streak', 'checkIns'],
     });
   }
 
