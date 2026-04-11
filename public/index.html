@@ -579,8 +579,8 @@
           </div>
         </template>
 
-        <!-- Progress Ring + Stats Row -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Progress Ring + Stats Row (hidden when no habits) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" x-show="habits.length > 0" x-transition>
           <!-- Progress Ring Card -->
           <div class="nm-card flex flex-col items-center justify-center py-8 md:col-span-1">
             <div class="relative mb-4">
@@ -675,7 +675,7 @@
               <!-- Top Row: Icon + Info + Check -->
               <div class="flex items-center gap-4">
                 <!-- Icon -->
-                <div class="nm-pressed w-16 h-16 flex items-center justify-center rounded-2xl text-3xl flex-shrink-0" x-text="habit.icon || '&#128640;'"></div>
+                <div class="nm-pressed w-16 h-16 flex items-center justify-center rounded-2xl text-3xl flex-shrink-0" x-text="habit.icon || '\u{1F680}'"></div>
 
                 <!-- Name + Streak -->
                 <div class="flex-1 min-w-0">
@@ -854,7 +854,7 @@
         // New Habit Form
         newHabit: {
           name: '',
-          icon: '&#128640;',
+          icon: '\u{1F680}',
           frequency: 'daily',
           preferredTime: '08:00',
           targetDaysPerWeek: 5,
@@ -942,6 +942,10 @@
             this.logout();
             this.showToast('Sesion expirada. Inicia sesion de nuevo.', 'error');
             throw new Error('Unauthorized');
+          }
+          // 204 No Content has no body — return null
+          if (res.status === 204) {
+            return null;
           }
           const data = await res.json();
           if (!res.ok || !data.success) {
