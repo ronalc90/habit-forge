@@ -17,7 +17,6 @@ const describeIfDb = process.env.DB_HOST ? describe : describe.skip;
 describeIfDb('HabitForge E2E Flow', () => {
   let app: INestApplication;
   let authToken: string;
-  let userId: string;
   let habitId: string;
 
   beforeAll(async () => {
@@ -63,7 +62,6 @@ describeIfDb('HabitForge E2E Flow', () => {
       expect(response.body.data.user.email).toBe(testEmail);
 
       authToken = response.body.data.accessToken;
-      userId = response.body.data.user.id;
     });
 
     it('POST /api/v1/auth/register - should reject duplicate email', async () => {
