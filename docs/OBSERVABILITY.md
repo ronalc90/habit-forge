@@ -222,13 +222,21 @@ const app = await NestFactory.create(AppModule, {
 ### Health check
 
 ```
-GET /api/v1
+GET /api/v1/health
 ```
+
+Publico (sin JWT) y sin dependencia de la base de datos. Es el endpoint que usan el
+`HEALTHCHECK` del Dockerfile, `docker-compose.yml`, las probes de Kubernetes y el
+health check del ALB/ECS en Terraform.
 
 Respuesta exitosa (200):
 ```json
 {
-  "status": "ok",
+  "success": true,
+  "data": {
+    "status": "ok",
+    "uptime": 42
+  },
   "timestamp": "2026-04-10T12:00:00.000Z"
 }
 ```

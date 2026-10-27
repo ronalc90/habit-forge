@@ -50,6 +50,12 @@ jobs:
     name: Escaneo Trivy
     runs-on: ubuntu-latest
 
+    # upload-sarif necesita security-events: write (el token por defecto es de solo lectura)
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4

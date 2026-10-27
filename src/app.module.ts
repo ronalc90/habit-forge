@@ -8,6 +8,7 @@ import { CheckInsModule } from './check-ins/check-ins.module';
 import { StreaksModule } from './streaks/streaks.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     StreaksModule,
     DashboardModule,
     NotificationsModule,
+    HealthModule,
   ],
 })
 export class AppModule {}
