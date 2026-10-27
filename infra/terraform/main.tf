@@ -231,7 +231,7 @@ resource "aws_lb_target_group" "app" {
   target_type = "ip"
 
   health_check {
-    path                = "/api/v1"
+    path                = "/api/v1/health"
     healthy_threshold   = 3
     unhealthy_threshold = 3
     timeout             = 5
@@ -327,7 +327,7 @@ resource "aws_ecs_task_definition" "app" {
       }
 
       healthCheck = {
-        command     = ["CMD-SHELL", "wget -qO- http://localhost:${var.container_port}/api/v1 || exit 1"]
+        command     = ["CMD-SHELL", "wget -qO- http://127.0.0.1:${var.container_port}/api/v1/health || exit 1"]
         interval    = 30
         timeout     = 5
         retries     = 3

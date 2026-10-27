@@ -36,10 +36,13 @@ RUN chown -R app:app /app
 # Cambiar a usuario no-root
 USER app
 
+# main.ts escucha en PORT (por defecto 3000); fijarlo para que coincida con EXPOSE
+ENV PORT=3002
+
 EXPOSE 3002
 
-# Health check
+# Health check contra el endpoint publico GET /api/v1/health
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD wget -qO- http://localhost:3002/api/v1 || exit 1
+  CMD wget -qO- "http://127.0.0.1:${PORT:-3002}/api/v1/health" || exit 1
 
 CMD ["node", "dist/main.js"]
