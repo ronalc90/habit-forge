@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Node.js-18-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js 18" />
+  <img src="https://img.shields.io/badge/Node.js-22-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js 22" />
   <img src="https://img.shields.io/badge/NestJS-10-E0234E?style=for-the-badge&logo=nestjs&logoColor=white" alt="NestJS 10" />
   <img src="https://img.shields.io/badge/TypeScript-5.3-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Jest-29-C21325?style=for-the-badge&logo=jest&logoColor=white" alt="Jest" />
@@ -120,7 +120,7 @@ SQLite / PostgreSQL
 
 | Capa | Tecnologia | Proposito |
 |------|-----------|-----------|
-| **Runtime** | Node.js 18 | Entorno de ejecucion |
+| **Runtime** | Node.js 22 | Entorno de ejecucion |
 | **Framework** | NestJS 10 | Framework backend modular |
 | **Lenguaje** | TypeScript 5.3 | Tipado estatico |
 | **ORM** | TypeORM 0.3 | Mapeo objeto-relacional |
@@ -137,7 +137,7 @@ SQLite / PostgreSQL
 
 ### Prerrequisitos
 
-- Node.js >= 18
+- Node.js >= 22
 - npm >= 9
 - Docker y Docker Compose (opcional, para PostgreSQL y Redis)
 
@@ -205,6 +205,12 @@ Todos los endpoints usan el prefijo `/api/v1`. Las respuestas siguen el formato 
   "timestamp": "2026-04-10T12:00:00.000Z"
 }
 ```
+
+### Salud
+
+| Metodo | Endpoint | Descripcion | Auth |
+|--------|----------|-------------|------|
+| `GET` | `/api/v1/health` | Health check (Docker, Kubernetes, ALB) | No |
 
 ### Autenticacion
 

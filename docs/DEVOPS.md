@@ -39,7 +39,7 @@
 ```
 
 **Stack tecnologico:**
-- **Runtime:** Node.js 18 (Alpine)
+- **Runtime:** Node.js 22 (Alpine)
 - **Framework:** NestJS 10 + TypeScript
 - **Base de datos:** PostgreSQL 16
 - **Cache:** Redis 7
@@ -54,7 +54,7 @@
 
 ### Requisitos
 
-- Node.js 18+
+- Node.js 22+
 - Docker y Docker Compose
 - Git
 

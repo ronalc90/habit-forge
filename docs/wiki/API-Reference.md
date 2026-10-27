@@ -20,6 +20,12 @@
 
 ## Endpoints
 
+### Salud
+
+| Metodo | Ruta | Descripcion | Auth |
+|--------|------|-------------|------|
+| GET | `/health` | Health check (Docker, Kubernetes, ALB) | No |
+
 ### Auth
 
 | Metodo | Ruta | Descripcion | Auth |

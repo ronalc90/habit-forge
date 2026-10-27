@@ -24,7 +24,7 @@
 | **Aplicacion** | HabitForge API |
 | **Stack** | NestJS + TypeScript |
 | **Puerto** | 3002 |
-| **Health endpoint** | `GET /api/v1` |
+| **Health endpoint** | `GET /api/v1/health` |
 | **Base de datos** | PostgreSQL 16 |
 | **Cache** | Redis 7 |
 | **Repositorio** | github.com/ronalc90/habit-forge |
@@ -37,10 +37,10 @@
 
 ```bash
 # Health check basico
-curl -s http://localhost:3002/api/v1
+curl -s http://localhost:3002/api/v1/health
 
 # Con timeout
-curl -s --max-time 5 http://localhost:3002/api/v1 || echo "API no responde"
+curl -s --max-time 5 http://localhost:3002/api/v1/health || echo "API no responde"
 ```
 
 ### Verificar servicios Docker
